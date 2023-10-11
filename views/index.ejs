@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Date Money Calculator</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <style>
+      .container {
+        margin: 10% 10%;
+        display: flex;
+        flex-direction: column;
+      }
+      .header-container {
+        display: flex;
+        justify-content: center;
+        margin: 80% 0%;
+      }
+      .money {
+        font-size: 5.5vh;
+      }
+      .button-container {
+        display: flex;
+      }
+      .default-btn {
+        width: 50%;
+        font-size: 2.2vh;
+        margin: 0.5vh 0.5vh;
+      }
+    </style>
+    <script defer src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script defer src="/javascripts/api.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header-container">
+        <h1 class="money"><span id="money-value"><%= restMoney %></span> <span style="font-size: 3.8vh">₩</span></h1>
+      </div>
+      <div class="button-container">
+        <button type="button" class="btn btn-primary default-btn" onclick="onClickChargeMoney(true)">주중</button>
+        <button type="button" class="btn btn-secondary default-btn" onclick="onClickChargeMoney(false)">주말</button>
+      </div>
+      <div class="button-container">
+        <button type="button" class="btn btn-warning default-btn" onclick="onClickRollbackChange()">되돌리기</button>
+        <button type="button" class="btn btn-success default-btn" onclick="onClickSaveChange()">저장</button>
+      </div>
+      <button style="font-size: 2.2vh; margin-top: 2vh" type="button" class="btn btn-light">소비 기록</button>
+    </div>
+  </body>
+</html>
