@@ -3,27 +3,69 @@ const getMoneyElement = () => {
 }
 
 const onClickChargeMoney = async (isWeekday) => {
-    const separator = isWeekday ? "WEEKDAY" : "WEEKEND";
+    const separator = isWeekday ? "weekday" : "weekend";
+    const moneyEl = getMoneyElement();
 
-    const {data: {amount}} = await axios({
-        url: `/money/config/${separator}`,
-        method: "GET",
-        headers: {"Content-Type": "application/json"}
+    const {data: {amount, message}} = await axios({
+        url: `/money/deposit/${separator}`,
+        method: "PUT",
+        headers: {"Content-Type": "application/json"},
+        data: {
+            amount: Number(moneyEl.innerText.replace(",",""))
+        }
     });
+    alert(message);
 
-    console.log("api given value", amount);
-
-    const moneyEl = getMoneyElement();
-    moneyEl.innerText += amount;
+    moneyEl.innerText = amount.toLocaleString("ko-KR");
 }
 
-const onClickRollbackChange = () => {
+const onClickRollbackChange = async () => {
+    if(confirm("충전한 금액을 회수하시겠습니까?")){
+        const moneyEl = getMoneyElement();
 
-    console.log("rollback change");
+        const {data: {amount, message}} = await axios({
+            url: `/money/rollback`,
+            method: "PUT",
+            headers: {"Content-Type": "application/json"},
+            data: {
+                amount: Number(moneyEl.innerText.replace(",",""))
+            }
+        });
+
+        alert(message);
+        moneyEl.innerText = amount.toLocaleString("ko-KR");
+    }
 }
 
-const onClickSaveChange = () => {
-    console.log("save change");
-    const moneyEl = getMoneyElement();
-    console.log("indicate money", Number(moneyEl.innerText));
+const onClickSpendMoneySave = async () => {
+    const inputEl = document.querySelector('.price-input');
+
+    if(confirm(`${inputEl.value.toLocaleString("ko-KR")}원 을 소비로 등록 하시겠습니까?`)) {
+        const moneyEl = getMoneyElement();
+
+        const {data: {amount, message}} = await axios({
+            url: `/money/pay`,
+            method: "PUT",
+            headers: {"Content-Type": "application/json"},
+            data: {
+                amount: Number(inputEl.value),
+                currentAmount: Number(moneyEl.innerText.replace(",",""))
+            }
+        });
+
+        alert(message);
+        moneyEl.innerText = amount.toLocaleString("ko-KR");
+        onClickOpenRecordPayPopup(false);
+    }
+}
+
+const onClickOpenRecordPayPopup = (active) => {
+    const modalEl = document.querySelector('.price-modal');
+    if(active) {
+        modalEl.classList.add('modal-on');
+        modalEl.classList.remove('modal-off');
+    } else {
+        modalEl.classList.add('modal-off');
+        modalEl.classList.remove('modal-on');
+    }
 }

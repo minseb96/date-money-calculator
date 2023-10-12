@@ -26,6 +26,48 @@
         font-size: 2.2vh;
         margin: 0.5vh 0.5vh;
       }
+      .modal-on {
+        display: flex;
+      }
+      .modal-off {
+        display: none;
+      }
+      .price-modal {
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        border: 0.1rem solid #E2E2E2;
+        border-radius: 1.2rem;
+        box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.15);
+        background: #fff;
+        height: 20%;
+        width: 90%;
+      }
+      .modal-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .modal-line {
+        width: 100%;
+        font-size: 2.2vh;
+        font-weight: bold;
+      }
+      .price-input {
+        font-size: 2.2vh;
+        border: 0.1rem solid #E2E2E2;
+      }
+      .modal-btn-container {
+        margin-top: 2vh;
+        display: flex;
+        width: 100%;
+      }
+      .modal-btn-container > button {
+        margin: 0;
+      }
     </style>
     <script defer src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script defer src="/javascripts/api.js"></script>
@@ -33,17 +75,26 @@
   <body>
     <div class="container">
       <div class="header-container">
-        <h1 class="money"><span id="money-value"><%= restMoney %></span> <span style="font-size: 3.8vh">₩</span></h1>
+        <h1 class="money"><span id="money-value"><%= restMoney.toLocaleString("ko-KR") %></span> <span style="font-size: 3.8vh">₩</span></h1>
       </div>
       <div class="button-container">
         <button type="button" class="btn btn-primary default-btn" onclick="onClickChargeMoney(true)">주중</button>
         <button type="button" class="btn btn-secondary default-btn" onclick="onClickChargeMoney(false)">주말</button>
       </div>
       <div class="button-container">
-        <button type="button" class="btn btn-warning default-btn" onclick="onClickRollbackChange()">되돌리기</button>
-        <button type="button" class="btn btn-success default-btn" onclick="onClickSaveChange()">저장</button>
+        <button type="button" style="width: 100%" class="btn btn-warning default-btn" onclick="onClickRollbackChange()">되돌리기</button>
       </div>
-      <button style="font-size: 2.2vh; margin-top: 2vh" type="button" class="btn btn-light">소비 기록</button>
+      <button style="font-size: 2.2vh; margin-top: 2vh" type="button" class="btn btn-light" onclick="onClickOpenRecordPayPopup(true)">소비 기록</button>
+    </div>
+    <div class="price-modal modal-off">
+      <div class="modal-container">
+        <div class="modal-line">소비금액</div>
+        <input class="price-input" type="number"/>
+        <div class="modal-btn-container">
+          <button type="button" class="btn btn-primary default-btn" onclick="onClickSpendMoneySave()">저장</button>
+          <button type="button" class="btn btn-secondary default-btn" onclick="onClickOpenRecordPayPopup(false)">닫기</button>
+        </div>
+      </div>
     </div>
   </body>
 </html>
