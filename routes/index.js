@@ -13,9 +13,20 @@ router.get('/', async (req, res, next) => {
     }
   }
   const { Items } = await dynamoDB.query(params).promise();
+  const configuration = await getMoneyConfiguration();
+  const weekdayPrice = configuration.Items[0].WEEKDAY_PRICE;
+  const weekendPrice = configuration.Items[0].WEEKEND_PRICE;
 
-  res.render('index', { restMoney: Items[0].REST_MONEY });
+  res.render('index', { restMoney: Items[0].REST_MONEY, weekdayPrice, weekendPrice });
 });
+
+router.put('/money/config', async (req, res) => {
+  const { weekdayPrice, weekendPrice } = req.body;
+  if(await putMoneyConfiguration(weekdayPrice, weekendPrice)) {
+    return res.status(200).json({status: "OK", message: "설정을 저장하였습니다."});
+  }
+  return res.status(200).json({status: "FAIL", message: "설정을 저장하는데 문제가 발생 하였습니다."});
+})
 
 router.put('/money/deposit/:separator', async (req, res) => {
   const separator = req.params.separator;
@@ -30,7 +41,7 @@ router.put('/money/deposit/:separator', async (req, res) => {
   const {Items} = await getMoneyConfiguration();
   const depositMoney = separator === "weekday" ? Items[0].WEEKDAY_PRICE : Items[0].WEEKEND_PRICE;
   await updateMoney(depositMoney + amount);
-  return res.status(200).json({amount: amount + depositMoney, message: `${depositMoney}원이 충전 되었습니다.`});
+  return res.status(200).json({amount: amount + depositMoney, message: `${depositMoney.toLocaleString("ko-KR")}원이 충전 되었습니다.`});
 });
 
 router.put('/money/rollback', async (req, res, next) => {
@@ -73,6 +84,28 @@ const getMoneyConfiguration = async () => {
     }
   }
   return await dynamoDB.query(params).promise();
+}
+
+const putMoneyConfiguration = async (weekdayPrice, weekendPrice) => {
+  const table = 'MONEY_CONFIGURATION';
+  const params = {
+    TableName: table,
+    Key: {
+      "ID": 1
+    },
+    UpdateExpression: "SET WEEKDAY_PRICE = :WEEKDAY_PRICE, WEEKEND_PRICE = :WEEKEND_PRICE",
+    ExpressionAttributeValues: {
+      ":WEEKDAY_PRICE": weekdayPrice,
+      ":WEEKEND_PRICE": weekendPrice
+    }
+  };
+  try {
+    await dynamoDB.update(params).promise();
+  } catch (e) {
+    console.log("error during update money configuration", e);
+    return false;
+  }
+  return true;
 }
 
 const updateMoney = async (amount) => {

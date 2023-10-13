@@ -32,7 +32,7 @@
       .modal-off {
         display: none;
       }
-      .price-modal {
+      .common-modal {
         align-items: center;
         justify-content: center;
         position: absolute;
@@ -43,7 +43,13 @@
         border-radius: 1.2rem;
         box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.15);
         background: #fff;
+      }
+      .price-modal {
         height: 20%;
+        width: 90%;
+      }
+      .config-modal {
+        height: 30%;
         width: 90%;
       }
       .modal-container {
@@ -85,14 +91,27 @@
         <button type="button" style="width: 100%" class="btn btn-warning default-btn" onclick="onClickRollbackChange()">되돌리기</button>
       </div>
       <button style="font-size: 2.2vh; margin-top: 2vh" type="button" class="btn btn-light" onclick="onClickOpenRecordPayPopup(true)">소비 기록</button>
+      <button style="font-size: 2.2vh; margin-top: 1vh" type="button" class="btn btn-info" onclick="onClickOpenConfigPopup(true)">충전금액설정</button>
     </div>
-    <div class="price-modal modal-off">
+    <div class="common-modal price-modal modal-off">
       <div class="modal-container">
-        <div class="modal-line">소비금액</div>
-        <input class="price-input" type="number"/>
+        <div class="modal-line">소비금액(원)</div>
+        <input id="priceInput" class="price-input" type="text" onkeyup="onKeyUpPriceInput(event)" />
         <div class="modal-btn-container">
           <button type="button" class="btn btn-primary default-btn" onclick="onClickSpendMoneySave()">저장</button>
           <button type="button" class="btn btn-secondary default-btn" onclick="onClickOpenRecordPayPopup(false)">닫기</button>
+        </div>
+      </div>
+    </div>
+    <div class="common-modal config-modal modal-off">
+      <div class="modal-container">
+        <div class="modal-line">주중</div>
+        <input id="configWeekday" class="price-input" type="text" onkeyup="onKeyUpPriceInput(event)" value="<%= weekdayPrice.toLocaleString('ko-KR') %>" />
+        <div class="modal-line">주말</div>
+        <input id="configWeekend" class="price-input" type="text" onkeyup="onKeyUpPriceInput(event)" value="<%= weekendPrice.toLocaleString('ko-KR') %>" />
+        <div class="modal-btn-container">
+          <button type="button" class="btn btn-primary default-btn" onclick="onClickSaveMoneyConfig()">저장</button>
+          <button type="button" class="btn btn-secondary default-btn" onclick="onClickOpenConfigPopup(false)">닫기</button>
         </div>
       </div>
     </div>
