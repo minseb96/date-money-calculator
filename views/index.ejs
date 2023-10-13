@@ -105,9 +105,9 @@
     </div>
     <div class="common-modal config-modal modal-off">
       <div class="modal-container">
-        <div class="modal-line">주중</div>
+        <div class="modal-line">주중(원)</div>
         <input id="configWeekday" class="price-input" type="text" onkeyup="onKeyUpPriceInput(event)" value="<%= weekdayPrice.toLocaleString('ko-KR') %>" />
-        <div class="modal-line">주말</div>
+        <div class="modal-line">주말(원)</div>
         <input id="configWeekend" class="price-input" type="text" onkeyup="onKeyUpPriceInput(event)" value="<%= weekendPrice.toLocaleString('ko-KR') %>" />
         <div class="modal-btn-container">
           <button type="button" class="btn btn-primary default-btn" onclick="onClickSaveMoneyConfig()">저장</button>
