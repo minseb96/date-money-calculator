@@ -108,5 +108,6 @@ const onClickSaveMoneyConfig = async () => {
 
         alert(message);
         onClickOpenConfigPopup(false);
+        window.location.reload();
     }
 }

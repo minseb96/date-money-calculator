@@ -74,6 +74,10 @@
       .modal-btn-container > button {
         margin: 0;
       }
+      .config-description {
+        font-size: 1.5vh;
+        text-wrap: normal;
+      }
     </style>
     <script defer src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script defer src="/javascripts/api.js"></script>
@@ -109,6 +113,8 @@
         <input id="configWeekday" class="price-input" type="text" onkeyup="onKeyUpPriceInput(event)" value="<%= weekdayPrice.toLocaleString('ko-KR') %>" />
         <div class="modal-line">주말(원)</div>
         <input id="configWeekend" class="price-input" type="text" onkeyup="onKeyUpPriceInput(event)" value="<%= weekendPrice.toLocaleString('ko-KR') %>" />
+        <br/>
+        <p class="config-description">0이 아닌 숫자를 입력하여 주세요.</p>
         <div class="modal-btn-container">
           <button type="button" class="btn btn-primary default-btn" onclick="onClickSaveMoneyConfig()">저장</button>
           <button type="button" class="btn btn-secondary default-btn" onclick="onClickOpenConfigPopup(false)">닫기</button>

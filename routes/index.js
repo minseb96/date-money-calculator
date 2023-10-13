@@ -88,15 +88,28 @@ const getMoneyConfiguration = async () => {
 
 const putMoneyConfiguration = async (weekdayPrice, weekendPrice) => {
   const table = 'MONEY_CONFIGURATION';
+  let UPDATE;
+  const UPDATE_WEEKDAY = "WEEKDAY_PRICE = :WEEKDAY_PRICE";
+  const UPDATE_WEEKEND = "WEEKEND_PRICE = :WEEKEND_PRICE";
+  if(weekdayPrice && !weekendPrice) {
+    UPDATE = `SET ${UPDATE_WEEKDAY}`;
+  } else if (!weekdayPrice && weekendPrice) {
+    UPDATE = `SET ${UPDATE_WEEKEND}`;
+  } else if (weekdayPrice && weekendPrice) {
+    UPDATE = `SET ${UPDATE_WEEKDAY}, ${UPDATE_WEEKEND}`;
+  } else {
+    return false;
+  }
+
   const params = {
     TableName: table,
     Key: {
       "ID": 1
     },
-    UpdateExpression: "SET WEEKDAY_PRICE = :WEEKDAY_PRICE, WEEKEND_PRICE = :WEEKEND_PRICE",
+    UpdateExpression: UPDATE,
     ExpressionAttributeValues: {
-      ":WEEKDAY_PRICE": weekdayPrice,
-      ":WEEKEND_PRICE": weekendPrice
+      ...(weekdayPrice && {":WEEKDAY_PRICE": weekdayPrice}),
+      ...(weekendPrice && {":WEEKEND_PRICE": weekendPrice})
     }
   };
   try {
