@@ -1,3 +1,4 @@
 ./config/credential.json
-.idea/*
 .idea
+node_modules
+package-lock.json
